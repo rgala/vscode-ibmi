@@ -437,8 +437,9 @@ export default class IBMi {
         const vscodePerms = vscodeExists ? await getPermissions(vscodeDir) : '';
 
         // Check if permissions need updating
+        const numericPerms = homePerms?.trim().split('').map(Number);
         const needsPermissionUpdate =
-          (homePerms !== 'error' && homePerms !== '750') ||
+          (homePerms !== 'error' && ((numericPerms[1] & 0x2) !== 0 || numericPerms[2] > 0)) ||
           !vscodeExists ||
           (vscodeExists && vscodePerms !== 'error' && vscodePerms !== '700');
 

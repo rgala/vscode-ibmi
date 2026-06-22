@@ -66,8 +66,9 @@ export async function handleConnectionResults(connection: IBMi, error: Connectio
       const { homeDir, homePerms, vscodeExists, vscodePerms } = data;
       let message = `Security recommendation: Update directory permissions?\n\n`;
       let needsUpdate = false;
-      
-      if (homePerms && homePerms !== '750') {
+
+      const numericPerms = homePerms?.trim().split('').map(Number);
+      if (numericPerms && ((numericPerms[1] & 0x2) !== 0 || numericPerms[2] > 0)) {
         message += `• Home directory (${homeDir}) has permissions ${homePerms}, recommended: 750\n`;
         needsUpdate = true;
       }
